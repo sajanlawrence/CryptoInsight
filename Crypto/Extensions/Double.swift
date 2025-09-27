@@ -62,9 +62,4 @@ extension Double {
     func toPercentString() -> String {
         String(format: "%.2f%%", self)
     }
-    
-    /// Converts a Double to a percentage string with 2 decimal places (e.g. "55.09%")
-    func toDoubleString() -> String {
-        String(format: "%.2f", self)
-    }
 }

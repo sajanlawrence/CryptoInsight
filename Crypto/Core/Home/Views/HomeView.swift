@@ -40,7 +40,7 @@ struct HomeView: View {
             }
         }
         .navigationDestination(item: $selectedCoin, destination: { coin in
-            Text(coin.name)
+            CoinDetailView(coin: coin)
         })
         .onAppear {
             withAnimation(
@@ -93,12 +93,7 @@ extension HomeView{
             HStack {
                 Text("Symbol")
                     .foregroundStyle(.secondary)
-                
-                //                Image(systemName: "chevron.right")
-                //                    .foregroundStyle(.secondary)
             }
-            
-            
             Spacer()
             Text("Name")
                 .foregroundStyle(.secondary)

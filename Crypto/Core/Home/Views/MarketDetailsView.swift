@@ -11,7 +11,6 @@ struct MarketDetailsView: View {
     let globalMarket: GlobalMarket
     var body: some View {
         VStack(alignment: .center, spacing: 0){
-            Spacer()
             Text("Global Crypto Market Summary")
                 .font(.largeTitle)
                 .bold()
@@ -26,6 +25,7 @@ struct MarketDetailsView: View {
                     .foregroundStyle(.secondary)
             }
             ScrollableCardsView(item: globalMarket)
+                .padding(.bottom)
             Spacer()
         }
     }
