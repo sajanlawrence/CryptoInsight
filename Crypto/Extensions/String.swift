@@ -28,16 +28,7 @@ extension String{
         return formatter.string(from: date)
     }
     
-    /// Returns a plain text string by removing all HTML tags
-    func removingHTMLTags() -> String {
-        guard let data = self.data(using: .utf8) else { return self }
-        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-            .documentType: NSAttributedString.DocumentType.html,
-            .characterEncoding: String.Encoding.utf8.rawValue
-        ]
-        if let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) {
-            return attributedString.string
-        }
-        return self
+    var strippedHTML: String {
+        return self.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
     }
 }

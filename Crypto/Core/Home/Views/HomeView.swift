@@ -10,7 +10,8 @@ import SwiftUI
 struct HomeView: View {
     @State private var showPortFolio: Bool = false
     @State private var animate: Bool = false
-    @State private var searchTxtField = ""
+    @State private var animateRank: Bool = false
+    @State private var sortedAscending: Bool = true
     @State private var vm = HomeViewModel()
     @State private var selectedCoin: Coin? = nil
     @State private var showMoreMarketDetails: Bool = false
@@ -33,7 +34,7 @@ struct HomeView: View {
                         .background(Color.blue)
                         .clipShape(.buttonBorder)
                 }
-                searchBarView
+                SearchBarView(searchTxtField: $vm.searchTxtField)
                 listHeaderView
                 coinListView
                 Spacer(minLength: 0)
@@ -76,20 +77,27 @@ extension HomeView{
         }
     }
     
-    private var searchBarView: some View{
-        HStack{
-            Image(systemName: "magnifyingglass")
-            TextField("Search by name or symbol...", text: $searchTxtField)
-            
-        }
-        .padding(18)
-    }
-    
     private var listHeaderView: some View{
         HStack{
-            Text("Rank")
-                .padding(.trailing, 20)
-                .foregroundStyle(.secondary)
+            HStack(spacing: 0) {
+                Text("Rank")
+                    .foregroundStyle(.secondary)
+                Image(systemName: "arrow.down")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 12, height: 12)
+                    .foregroundStyle(.secondary)
+                    .padding(.leading, 2)
+                    .rotationEffect(Angle(degrees: animateRank ? 180 : 0))
+            }
+            .padding(.trailing, 15)
+            .onTapGesture {
+                withAnimation(.easeInOut){
+                    animateRank.toggle()
+                    sortedAscending.toggle()
+                    vm.sortBasedOnRank(ascending: sortedAscending)
+                }
+            }
             HStack {
                 Text("Symbol")
                     .foregroundStyle(.secondary)
@@ -107,7 +115,7 @@ extension HomeView{
     
     private var coinListView: some View{
         List(selection: $selectedCoin){
-            ForEach(vm.coins) { coin in
+            ForEach(vm.filteredCoins) { coin in
                 CoinRowView(coin: coin)
                     .tag(coin)
             }

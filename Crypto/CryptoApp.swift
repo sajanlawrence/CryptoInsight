@@ -9,10 +9,17 @@ import SwiftUI
 
 @main
 struct CryptoApp: App {
+    @State private var showLaunchView: Bool = true
     var body: some Scene {
         WindowGroup {
-            NavigationStack{
-                HomeView()
+            ZStack{
+                NavigationStack{
+                    HomeView()
+                }
+                if showLaunchView{
+                    LaunchView(showLaunchView: $showLaunchView)
+                        .transition(.move(edge: .leading))
+                }
             }
         }
     }

@@ -10,6 +10,7 @@ import SwiftUI
 struct CoinDetailView: View {
     let coin: Coin
     @State private var vm = CoinDetailViewModel()
+    @State private var showFullDescription: Bool = false
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         ScrollView {
@@ -25,7 +26,7 @@ struct CoinDetailView: View {
                         headerSection
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Status")
-                                .font(.title2)
+                                .font(.title)
                                 .bold()
                             HStack {
                                 statusLabel(title: "New", value: detail.isNew ?? false ? "Yes" : "No", color: detail.isNew ?? false ? .green : .red)
@@ -41,10 +42,29 @@ struct CoinDetailView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
+                        VStack(alignment: .leading, spacing: 10){
+                            Text("Overview")
+                                .font(.title)
+                                .bold()
+                            Text(detail.description?.strippedHTML ?? "Not available")
+                                .foregroundStyle(.secondary)
+                                .lineLimit(showFullDescription ? nil : 3)
+                            Button {
+                                withAnimation(.easeInOut){
+                                    showFullDescription.toggle()
+                                }
+                            } label: {
+                                Text(showFullDescription ? "Hide all" : "Read more..")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.blue)
+                                    .padding(.vertical, 4)
+                            }
+                        }
                         
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Team")
-                                .font(.title2)
+                                .font(.title)
                                 .bold()
                             if (detail.team ?? []).count == 0 {
                                 Text("No team information available")
@@ -68,13 +88,22 @@ struct CoinDetailView: View {
                         
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Technical Details")
-                                .font(.title2)
+                                .font(.title)
                                 .bold()
                             infoRow(title: "Proof Type", value: detail.proofType ?? "NA")
                             infoRow(title: "Hardware Wallet", value: detail.hardwareWallet ?? false ? "Supported" : "Not Supported")
                             infoRow(title: "Organization", value: detail.orgStructure ?? "NA")
                             infoRow(title: "Hash Algorithm", value: detail.hashAlgorithm ?? "NA")
                             infoRow(title: "Type", value: coin.type.capitalized)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        VStack(alignment: .leading){
+                            if let websiteURL = detail.links?.website?.first,
+                               let url = URL(string: websiteURL){
+                                Link("Website", destination: url)
+                                    .foregroundStyle(.blue)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
